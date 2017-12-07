@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>信用卡驗證</title>
+    <style>
+        html {
+            box-sizing: border-box;
+            font-family: '微軟正黑體';
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: inherit;
+        }
+
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+        }
+
+        .wrap {
+            margin-top: 50px;
+        }
+
+        [type="text"],
+        [type="button"] {
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+
+        [type="button"] {
+            height: 30px;
+        }
+
+        p {
+            margin-top: 4px;
+            font-size: 12px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <input class="number" type="text" placeholder="請輸入信用卡卡號" maxlength="16">
+        <input class="btn" type="button" value="驗證">
+        <br>
+        <p>例：4311465606406131</p>
+    </div>
+
+    <script>
+        //5412345678901232
+        //4311465606406131
+        //4048022207868134
+        //372802490654257
+        const btn = document.querySelector('.btn');
+        const input_num = document.querySelector('.number');
+
+        function check() {
+            let total = 0;
+            const num = input_num.value;
+            const re = /\d{15}/;
+            if (!re.test(num)) {
+                alert('請輸入連續數字，至少15位。');
+                input_num.value = '';
+                return false;
+            }
+
+            const num_array = Array.from(num);
+            // console.log(num_array);
+
+            if ((num_array.length % 2) == 0) {
+                num_array.forEach((num, i) => {
+                    if (i % 2 == 0) {
+                        let temp = num * 2;
+                        if (temp > 9) {
+                            temp = temp - 9;
+                        }
+                        // console.log(i, temp);
+                        total += temp;
+                    } else {
+                        total += parseInt(num);
+                        // console.log(i, parseInt(num));
+                    }
+                });
+            } else {
+                num_array.forEach((num, i) => {
+                    if ((i + 1) % 2 == 0) {
+                        let temp = num * 2;
+                        if (temp > 9) {
+                            temp = temp - 9;
+                        }
+                        // console.log(i, temp);
+                        total += temp;
+                    } else {
+                        total += parseInt(num);
+                        // console.log(i, parseInt(num));
+                    }
+                });
+            }
+            const check_num = parseInt(num_array[num_array.length - 1]);
+            const sum = total - check_num;
+            // console.log(check_num);
+            // console.log(sum);
+            if (10 - (sum % 10) == check_num) {
+                alert('驗證成功');
+            } else {
+                alert('驗證失敗');
+            }
+        }
+
+
+        btn.addEventListener('click', check);
+    </script>
+</body>
+
+</html>
